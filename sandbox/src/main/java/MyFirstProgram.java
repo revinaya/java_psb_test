@@ -3,8 +3,8 @@ public class MyFirstProgram {
     public static void main(String[] args) {
         Point p1 = new Point(2, 2);
         Point p2 = new Point(4, 4);
-        System.out.println("Расстояние между двумя точками = " + distance(p1, p2));
-
+        System.out.println("Расстояние между двумя точками 1 способ = " + distance(p1, p2));
+        System.out.println("Расстояние между двумя точками 2 способ = " + Point.distance(p1, p2));
     }
 
     public static double distance(Point p1, Point p2) {
