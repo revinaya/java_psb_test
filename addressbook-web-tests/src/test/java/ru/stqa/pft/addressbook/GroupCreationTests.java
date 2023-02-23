@@ -17,7 +17,7 @@ public class GroupCreationTests {
   public void setUp() throws Exception {
     wd = new FirefoxDriver();
     wd.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-    wd.get("http://localhost:8080/addressbook/group.php");
+    wd.get("http://localhost:8080/addressbook/");
     login("admin", "secret");
   }
 
@@ -32,10 +32,10 @@ public class GroupCreationTests {
   }
 
   @Test
-  public void testGroupCreation() throws Exception {
+  public void testGroupCreation()  {
     gotoGroupPage();
     initGroupCreation();
-    fillGroupForm(new GroupData("test1", "test2", "test3"));
+    fillGroupForm(new GroupData("test10", "test20", "test30"));
     submitGroupCreation();
     returnToGroupPage();
   }
