@@ -20,4 +20,20 @@ public class ContactHelper extends HelperBase {
         type(By.name("mobile"), contactData.mobile());
         type(By.name("email"), contactData.email());
       }
+
+    public void selectContact() { // пока выбираем первый
+        click(By.name("selected[]"));
+    }
+
+    public void deleteContact() {
+        click(By.xpath("//input[@value='Delete']"));
+    }
+
+    public void initContactModification() {
+        click(By.xpath("//img[@alt='Edit']"));
+    }
+
+    public void updateContactModification() {
+        click(By.name("update"));
+    }
 }
