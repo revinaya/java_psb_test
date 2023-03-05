@@ -20,7 +20,9 @@ public class ContactHelper extends HelperBase {
         type(By.name("mobile"), contactData.mobile());
         type(By.name("email"), contactData.email());
       }
-
+    public void returnToContactPage() {
+        click(By.linkText("home page"));
+    }
     public void selectContact() { // пока выбираем первый
         click(By.name("selected[]"));
     }
@@ -35,5 +37,15 @@ public class ContactHelper extends HelperBase {
 
     public void updateContactModification() {
         click(By.name("update"));
+    }
+
+    public void createContact(ContactData contact) {
+      fillContactForm(contact);
+      submitContactCreation();
+      returnToContactPage();
+    }
+
+    public boolean isThereAContact() {
+        return isElementPresent(By.name("selected[]"));
     }
 }
