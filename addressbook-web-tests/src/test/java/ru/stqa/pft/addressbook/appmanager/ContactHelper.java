@@ -30,6 +30,7 @@ public class ContactHelper extends HelperBase {
         type(By.name("email"), contactData.email());
         type(By.name("email2"), contactData.email2());
         type(By.name("email3"), contactData.email3());
+        attach(By.name("photo"), contactData.getPhoto());
       }
     public void returnToContactPage() {
         click(By.linkText("home page"));
