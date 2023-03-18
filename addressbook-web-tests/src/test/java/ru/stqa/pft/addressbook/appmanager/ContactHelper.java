@@ -24,14 +24,14 @@ public class ContactHelper extends HelperBase {
         type(By.name("firstname"), contactData.firstname());
         type(By.name("lastname"), contactData.lastname());
         type(By.name("address"), contactData.address());
-        type(By.name("home"), contactData.homePhone());
+     /*   type(By.name("home"), contactData.homePhone());
         type(By.name("mobile"), contactData.mobilePhone());
         type(By.name("work"), contactData.workPhone());
         type(By.name("email"), contactData.email());
         type(By.name("email2"), contactData.email2());
         type(By.name("email3"), contactData.email3());
-        attach(By.name("photo"), contactData.getPhoto());
-      }
+        attach(By.name("photo"), contactData.getPhoto());*/
+       }
     public void returnToContactPage() {
         click(By.linkText("home page"));
     }
