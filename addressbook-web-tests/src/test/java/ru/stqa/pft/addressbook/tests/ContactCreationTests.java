@@ -1,11 +1,13 @@
 package ru.stqa.pft.addressbook.tests;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
+import ru.stqa.pft.addressbook.model.Contacts;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +16,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 public class ContactCreationTests extends TestBase {
 
@@ -26,34 +31,23 @@ public class ContactCreationTests extends TestBase {
                 json += line;
                 line = reader.readLine();
             }
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
             List<ContactData> contacts = gson.fromJson(json, new TypeToken<List<ContactData>>() {}.getType()); // List<ContactData.class> то же самое
             return contacts.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
         }
     }
     @Test (dataProvider = "validContactsFromJson")
-    public void testContactCreation()  {
-        app.goTo().newContactPage();
-
-
-    }
-}
-      /*  File photo = new File ("src/test/resources/tomcat.png");
+    public void testContactCreation(ContactData contact)  {
+        File photo = new File ("src/test/resources/tomcat.png");
         Contacts before = app.contact().all();
         app.goTo().newContactPage();
-        app.contact().fillContactForm(
-                 new ContactData().withFirstname("Yulia1").withLastname("Revina1")
-                .withAddress("000111222"));
-            /*    .withHomePhone("111").withMobilePhone("222").withWorkPhone("333")
-                .withEmail("test@mail.ru").withEmail2("test2@mail.ru").withEmail3("test3@mail.ru").withPhoto(photo)); */
-     //   app.contact().create(contact);
-  /*      app.contact().submitContactCreation();
-        app.contact().returnToContactPage();  // переделать
+        app.contact().create(contact);
         Contacts after = app.contact().all();
-     //   assertThat(after.size(), equalTo(before.size() + 1));
-     //   assertThat(after, equalTo(
-     //           before.withAdded(contact.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));
-    }
+        assertThat(after.size(), equalTo(before.size() + 1));
+        assertThat(after, equalTo(
+          before.withAdded(contact.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));
+       }
+}
 
 /*    @Test
     public void testCurrentDir() {

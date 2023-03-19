@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.Objects;
 
 public class ContactData {
+    @Expose(serialize = false)
     private int id = Integer.MAX_VALUE;
     @Expose
     private String firstname;
@@ -29,8 +30,9 @@ public class ContactData {
     private String email3;
     @Expose
     private String allEmails;
-    @Expose
+
     private File photo;
+
 
     public int getId() {
         return id;
@@ -123,6 +125,7 @@ public class ContactData {
         this.photo = photo;
         return this;
     }
+
     public ContactData() {
     }
 

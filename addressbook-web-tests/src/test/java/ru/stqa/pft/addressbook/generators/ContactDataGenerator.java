@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContactDataGenerator {
-
+    // в Конфигурации -f src/test/resources/contacts.json -c 3 -d json
     @Parameter(names = "-c", description = "Contact count")
     public int count;
     @Parameter(names = "-f", description = "Target file")
