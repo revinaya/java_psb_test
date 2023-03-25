@@ -1,37 +1,70 @@
 package ru.stqa.pft.addressbook.model;
 
 import com.google.gson.annotations.Expose;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
 import java.io.File;
 import java.util.Objects;
 
+@XStreamAlias("contact")
+@Entity
+@Table(name = "addressbook")
 public class ContactData {
     @Expose(serialize = false)
+    @Id
+    @Column(name = "id")
     private int id = Integer.MAX_VALUE;
     @Expose
+    @Column(name = "firstname")
     private String firstname;
     @Expose
+    @Column(name = "lastname")
     private String lastname;
     @Expose
+    @Transient
+    private String group;
+    @Expose
+    @Column(name = "address")
+    @Type(type = "text")
     private String address;
     @Expose
+    @Column(name = "home")
+    @Type(type = "text")
     private String homePhone;
     @Expose
+    @Column(name = "mobile")
+    @Type(type = "text")
     private String mobilePhone;
     @Expose
+    @Column(name = "work")
+    @Type(type = "text")
     private String workPhone;
     @Expose
+    @Transient
     private String allPhones;
     @Expose
+    @Column(name = "email")
+    @Type(type = "text")
     private String email;
     @Expose
+    @Column(name = "email2")
+    @Type(type = "text")
     private String email2;
     @Expose
+    @Column(name = "email3")
+    @Type(type = "text")
     private String email3;
     @Expose
+    @Transient
     private String allEmails;
-
-    private File photo;
+    @Expose
+    /*
+    @Column(name = "photo")
+    @Type(type = "text")*/
+    @Transient
+    private String photo;
 
 
     public int getId() {
@@ -44,7 +77,10 @@ public class ContactData {
         return lastname;
     }
     public File getPhoto() {
-        return photo;
+        if(photo != null){
+            return new File(photo);
+        }
+        return null;
     }
     public String address() {
         return address;
@@ -122,11 +158,31 @@ public class ContactData {
         return this;
     }
     public ContactData withPhoto(File photo) {
-        this.photo = photo;
+        this.photo = photo.getPath();
         return this;
     }
 
     public ContactData() {
+    }
+
+    @Override
+    public String toString() {
+        return "ContactData{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", group='" + group + '\'' +
+                ", address='" + address + '\'' +
+                ", homePhone='" + homePhone + '\'' +
+                ", mobilePhone='" + mobilePhone + '\'' +
+                ", workPhone='" + workPhone + '\'' +
+                ", allPhones='" + allPhones + '\'' +
+                ", email='" + email + '\'' +
+                ", email2='" + email2 + '\'' +
+                ", email3='" + email3 + '\'' +
+                ", allEmails='" + allEmails + '\'' +
+                ", photo='" + photo + '\'' +
+                '}';
     }
 
     @Override
@@ -138,7 +194,18 @@ public class ContactData {
 
         if (id != that.id) return false;
         if (!Objects.equals(firstname, that.firstname)) return false;
-        return Objects.equals(lastname, that.lastname);
+        if (!Objects.equals(lastname, that.lastname)) return false;
+        if (!Objects.equals(group, that.group)) return false;
+        if (!Objects.equals(address, that.address)) return false;
+        if (!Objects.equals(homePhone, that.homePhone)) return false;
+        if (!Objects.equals(mobilePhone, that.mobilePhone)) return false;
+        if (!Objects.equals(workPhone, that.workPhone)) return false;
+        if (!Objects.equals(allPhones, that.allPhones)) return false;
+        if (!Objects.equals(email, that.email)) return false;
+        if (!Objects.equals(email2, that.email2)) return false;
+        if (!Objects.equals(email3, that.email3)) return false;
+        if (!Objects.equals(allEmails, that.allEmails)) return false;
+        return Objects.equals(photo, that.photo);
     }
 
     @Override
@@ -146,15 +213,18 @@ public class ContactData {
         int result = id;
         result = 31 * result + (firstname != null ? firstname.hashCode() : 0);
         result = 31 * result + (lastname != null ? lastname.hashCode() : 0);
+        result = 31 * result + (group != null ? group.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (homePhone != null ? homePhone.hashCode() : 0);
+        result = 31 * result + (mobilePhone != null ? mobilePhone.hashCode() : 0);
+        result = 31 * result + (workPhone != null ? workPhone.hashCode() : 0);
+        result = 31 * result + (allPhones != null ? allPhones.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (email2 != null ? email2.hashCode() : 0);
+        result = 31 * result + (email3 != null ? email3.hashCode() : 0);
+        result = 31 * result + (allEmails != null ? allEmails.hashCode() : 0);
+        result = 31 * result + (photo != null ? photo.hashCode() : 0);
         return result;
-    }
-    @Override
-    public String toString() {
-        return "ContactData{" +
-                "id='" + id + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                '}';
     }
 
 }
