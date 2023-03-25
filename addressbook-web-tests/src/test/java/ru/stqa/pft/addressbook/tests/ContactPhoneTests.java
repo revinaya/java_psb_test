@@ -31,6 +31,7 @@ public class ContactPhoneTests extends TestBase {
         assertThat(contact.allEmails(), equalTo(mergeEmails(contactInfoFromEditForm)));
         assertThat(contact.allPhones(), equalTo(mergePhones(contactInfoFromEditForm)));
  //     assertThat(contact.address(), equalTo(contactInfoFromEditForm.address()));
+        verifyContactListInUI();
     }
     public static String cleaned (String phone){
         return phone.replaceAll("\\s", "").replaceAll("[-()]", "");
