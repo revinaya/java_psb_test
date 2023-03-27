@@ -3,8 +3,11 @@ package ru.stqa.pft.addressbook.appmanager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
+import ru.stqa.pft.addressbook.model.GroupData;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 
@@ -20,7 +23,7 @@ public class ContactHelper extends HelperBase {
         click(By.name("submit"));
       }
 
-    public void fillContactForm(ContactData contactData) {
+    public void fillContactForm(ContactData contactData, boolean creation) {
         type(By.name("firstname"), contactData.firstname());
         type(By.name("lastname"), contactData.lastname());
         type(By.name("address"), contactData.address());
@@ -31,7 +34,17 @@ public class ContactHelper extends HelperBase {
         type(By.name("email2"), contactData.email2());
         type(By.name("email3"), contactData.email3());
         attach(By.name("photo"), contactData.getPhoto());
-       }
+        groupInAddContact(contactData, creation);
+        if (creation) {
+            if(contactData.getGroups().size() > 0) {
+            Assert.assertTrue(contactData.getGroups().size() == 1);
+            new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroups().iterator().next().getName());
+            }
+        } else {
+            Assert.assertFalse(isElementPresent(By.name("new_group")));
+        }
+    }
+
     public void returnToContactPage() {
         click(By.linkText("home page"));
     }
@@ -61,7 +74,7 @@ public class ContactHelper extends HelperBase {
     }
 
     public void create(ContactData contact) {
-      fillContactForm(contact);
+      fillContactForm(contact, true);
       submitContactCreation();
       ContactCache = null;
       returnToContactPage();
@@ -69,7 +82,7 @@ public class ContactHelper extends HelperBase {
     public void modify(ContactData contact) {
         selectContactById(contact.getId());
         initContactModificationById(contact.getId());
-        fillContactForm(contact);
+        fillContactForm(contact, true);
         updateContactModification();
         ContactCache = null;
         returnToContactPage();
@@ -127,4 +140,30 @@ public class ContactHelper extends HelperBase {
                 .withHomePhone(homePhone).withMobilePhone(mobilePhone).withWorkPhone(workPhone)
                 .withEmail(email).withEmail2(email2).withEmail3(email3);
     }
+
+    private void groupInAddContact(ContactData contactData, boolean creation) {
+        if (contactData.getGroups().size() > 0) {
+            Assert.assertTrue(contactData.getGroups().size() == 1);
+            if (creation) {
+                new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroups().iterator().next().getName());
+            } else {
+                Assert.assertFalse(isElementPresent(By.name("new_group")));
+            }
+        }
+    }
+    public void addToGroup(ContactData contact, GroupData group){
+        selectContactById(contact.getId());
+        new Select(wd.findElement(By.name("to_group"))).selectByVisibleText(group.getName());
+        wd.findElement(By.name("add")).click();
+        wd.get("http://localhost:8080/addressbook/");
+    }
+
+    public void removeGroup(ContactData contact, GroupData group){
+        new Select(wd.findElement(By.name("group"))).selectByVisibleText(group.getName());
+        selectContactById(contact.getId());
+        wd.findElement(By.name("remove")).click();
+        wd.get("http://localhost:8080/addressbook/");
+    }
+
+
 }

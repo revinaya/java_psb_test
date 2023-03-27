@@ -6,7 +6,9 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.File;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @XStreamAlias("contact")
 @Entity
@@ -22,9 +24,6 @@ public class ContactData {
     @Expose
     @Column(name = "lastname")
     private String lastname;
-    @Expose
-    @Transient
-    private String group;
     @Expose
     @Column(name = "address")
     @Type(type = "text")
@@ -66,6 +65,16 @@ public class ContactData {
     @Transient
     private String photo;
 
+    @Expose
+    @Transient
+    private String groupName;
+
+    @ManyToMany(fetch = FetchType.EAGER) // настройка
+    @JoinTable (name = "address_in_groups",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+    private Set<GroupData> groups = new HashSet<GroupData>();
+
 
     public int getId() {
         return id;
@@ -103,7 +112,10 @@ public class ContactData {
         return email3;
     }
     public String allEmails() { return allEmails; }
-
+    public String groupName() {return groupName;}
+    public Groups getGroups() {
+        return new Groups(groups);
+    }
     public ContactData withId(int id) {
         this.id = id;
         return this;
@@ -161,6 +173,15 @@ public class ContactData {
         this.photo = photo.getPath();
         return this;
     }
+      public ContactData withGroupName(String groupName) {
+        this.groupName = groupName;
+        return this;
+    }
+
+    public ContactData inGroup(GroupData group) {
+        groups.add(group);
+        return this;
+    }
 
     public ContactData() {
     }
@@ -171,7 +192,6 @@ public class ContactData {
                 "id=" + id +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
-                ", group='" + group + '\'' +
                 ", address='" + address + '\'' +
                 ", homePhone='" + homePhone + '\'' +
                 ", mobilePhone='" + mobilePhone + '\'' +
@@ -195,7 +215,6 @@ public class ContactData {
         if (id != that.id) return false;
         if (!Objects.equals(firstname, that.firstname)) return false;
         if (!Objects.equals(lastname, that.lastname)) return false;
-        if (!Objects.equals(group, that.group)) return false;
         if (!Objects.equals(address, that.address)) return false;
         if (!Objects.equals(homePhone, that.homePhone)) return false;
         if (!Objects.equals(mobilePhone, that.mobilePhone)) return false;
@@ -213,7 +232,6 @@ public class ContactData {
         int result = id;
         result = 31 * result + (firstname != null ? firstname.hashCode() : 0);
         result = 31 * result + (lastname != null ? lastname.hashCode() : 0);
-        result = 31 * result + (group != null ? group.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (homePhone != null ? homePhone.hashCode() : 0);
         result = 31 * result + (mobilePhone != null ? mobilePhone.hashCode() : 0);

@@ -1,6 +1,0 @@
-15960 [main] INFO  r.s.pft.addressbook.tests.TestBase -- Start test testContactCreation with parameters [ContactData{id='2147483647', firstname='name 0', lastname='lastname 0'}]
-55227 [main] INFO  r.s.pft.addressbook.tests.TestBase -- Stop test testContactCreation
-55227 [main] INFO  r.s.pft.addressbook.tests.TestBase -- Start test testContactCreation with parameters [ContactData{id='2147483647', firstname='name 1', lastname='lastname 1'}]
-68007 [main] INFO  r.s.pft.addressbook.tests.TestBase -- Stop test testContactCreation
-68008 [main] INFO  r.s.pft.addressbook.tests.TestBase -- Start test testContactCreation with parameters [ContactData{id='2147483647', firstname='name 2', lastname='lastname 2'}]
-119375 [main] INFO  r.s.pft.addressbook.tests.TestBase -- Stop test testContactCreation
