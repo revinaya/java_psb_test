@@ -17,6 +17,7 @@ public class ApplicationManager {
     private final Properties propertiese;
     private WebDriver wd;
     private String browser;
+    private RegistrationHelper registrationHelper;
 
     public ApplicationManager(String browser) {
         this.browser = browser;
@@ -26,20 +27,13 @@ public class ApplicationManager {
     public void init() throws IOException {
         String target = System.getProperty("target", "local");
         propertiese.load(new FileReader(new File(String.format("src/test/resources/%s.properties", target))));
-
-        if (browser.equals(BrowserType.FIREFOX)) {
-            wd = new FirefoxDriver();
-        } else if (browser.equals(BrowserType.CHROME)) {
-            wd = new ChromeDriver();
-        }
-        wd.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-        wd.get(propertiese.getProperty("web.baseUrl"));
     }
 
     public void stop() {
+        if (wd != null) {
         wd.quit();
+        }
     }
-
     public boolean isElementPresent(By by) {
         try {
             wd.findElement(by);
@@ -56,4 +50,23 @@ public class ApplicationManager {
     public String getProperty(String key) {
         return propertiese.getProperty(key);
     }
-}
+
+    public RegistrationHelper registration() {
+        if (registrationHelper == null) {
+            registrationHelper = new RegistrationHelper(this);
+        }
+        return registrationHelper;
+    }
+    public WebDriver getDriver() {
+        if (wd == null) {
+            if (browser.equals(BrowserType.FIREFOX)) {
+                wd = new FirefoxDriver();
+            } else if (browser.equals(BrowserType.CHROME)) {
+                wd = new ChromeDriver();
+            }
+            wd.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+            wd.get(propertiese.getProperty("web.baseUrl"));
+        }
+        return wd;
+    }
+   }
