@@ -7,6 +7,7 @@ import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
 import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.model.Groups;
+import java.util.Iterator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -27,26 +28,48 @@ public class AddAndDelContactToGroupTests extends TestBase{
         }
     }
 
+
     @Test
     public void testContactAddToGroup() {
-        Contacts beforeContact = app.db().contacts();
-        ContactData contact = beforeContact.iterator().next();
-        Groups beforeGroup = app.db().groups();
-        GroupData group = beforeGroup.iterator().next();
-        if (!contact.getGroups().isEmpty() && contact.getGroups().contains(group)) {
-            app.contact().removeGroup(contact, group);
+        Contacts beforeContacts = app.db().contacts();
+        Groups beforeGroups = app.db().groups();
+        ContactData contact = null;
+        GroupData group = null;
+
+        Iterator<ContactData> iteratorContacts = beforeContacts.iterator();
+        Iterator<GroupData> iteratorGroups = null;
+
+        // Ищем контакт не входящий в группу
+        ContactData whileContact = null;
+        GroupData whileGroup = null;
+        while (iteratorContacts.hasNext()) {
+            whileContact = iteratorContacts.next();
+            iteratorGroups = beforeGroups.iterator();
+            while (iteratorGroups.hasNext()) {
+                whileGroup = iteratorGroups.next();
+                if (whileContact.getGroups().isEmpty() || !whileContact.getGroups().contains(whileGroup)) {
+                    contact = whileContact;
+                    group = whileGroup;
+                    System.out.println("нашли контакт " + contact);
+                    break;
+                }
+            }
+            if (contact != null) {
+                break;
+            }
         }
+
         Groups beforeLinkedGroup = app.db().contacts().stream().iterator().next().getGroups();
         System.out.println("Группы связанные ДО " + beforeLinkedGroup);
 
         app.contact().addToGroup(contact, group);
-        Contacts afterContact = app.db().contacts();
-        Groups afterGroup = app.db().groups();
+        Contacts afterContacts = app.db().contacts();
+        Groups afterGroups = app.db().groups();
         Groups afterLinkedGroup = app.db().contacts().stream().iterator().next().getGroups();
         System.out.println("Группы связанные ПОСЛЕ " + afterLinkedGroup);
 
-        Assert.assertEquals(afterGroup.size(), beforeGroup.size());
-        Assert.assertEquals(afterContact.size(), beforeContact.size());
+        Assert.assertEquals(afterGroups.size(), beforeGroups.size());
+        Assert.assertEquals(afterContacts.size(), beforeContacts.size());
         assertThat(afterLinkedGroup, equalTo(beforeLinkedGroup.withAdded(group)));
     }
 
