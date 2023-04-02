@@ -8,7 +8,7 @@ import ru.stqa.pft.mantis.appmanager.ApplicationManager;
 public class TestBase {
 
     public static final ApplicationManager app
-            = new ApplicationManager(System.getProperty("browser", BrowserType.CHROME));
+            = new ApplicationManager(System.getProperty("browser", BrowserType.FIREFOX));
 
     @BeforeSuite(alwaysRun = true)
     public void setUp() throws Exception {
@@ -18,7 +18,6 @@ public class TestBase {
     @AfterSuite(alwaysRun = true)
     public void tearDown() throws Exception {
         app.stop();
-        //  logout();
     }
 
 }
