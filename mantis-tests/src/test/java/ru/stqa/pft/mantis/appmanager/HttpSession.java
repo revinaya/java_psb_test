@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
+
 public class HttpSession {
     private CloseableHttpClient httpclient;
     private ApplicationManager app;

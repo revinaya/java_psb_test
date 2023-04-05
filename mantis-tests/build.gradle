@@ -6,10 +6,17 @@ repositories {
 
 dependencies {
     implementation 'org.testng:testng:7.0.0'
+    implementation 'ch.qos.logback:logback-classic:1.1.5'
     implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
     implementation 'org.hamcrest:java-hamcrest:2.0.0.0'
     implementation 'org.apache.httpcomponents:httpclient:4.5.14'
     implementation 'commons-net:commons-net:3.4'
+    implementation 'org.subethamail:subethasmtp:3.1.7'
+    implementation 'ru.lanwen.verbalregex:java-verbal-expressions:1.4'
+    implementation 'mysql:mysql-connector-java:8.0.32'
+    implementation 'org.junit.jupiter:junit-jupiter:5.6.0'
+    implementation 'org.hibernate:hibernate-core:5.6.15.Final'
+
 }
 
 test {
