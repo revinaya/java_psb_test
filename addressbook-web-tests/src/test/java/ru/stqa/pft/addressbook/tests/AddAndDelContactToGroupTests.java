@@ -14,6 +14,9 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class AddAndDelContactToGroupTests extends TestBase{
 
+    private ContactData contactForTest;
+    private GroupData groupForTest;
+
     @BeforeMethod
     public void ensurePreconditions() {
         if (app.db().groups().size() == 0) {
@@ -28,36 +31,41 @@ public class AddAndDelContactToGroupTests extends TestBase{
         }
     }
 
-
-    @Test
-    public void testContactAddToGroup() {
+    public void getContactForTest() {
         Contacts beforeContacts = app.db().contacts();
         Groups beforeGroups = app.db().groups();
-        ContactData contact = null;
-        GroupData group = null;
-
         Iterator<ContactData> iteratorContacts = beforeContacts.iterator();
         Iterator<GroupData> iteratorGroups = null;
 
         // Ищем контакт не входящий в группу
-        ContactData whileContact = null;
-        GroupData whileGroup = null;
+        ContactData whileContact;
+        GroupData whileGroup;
         while (iteratorContacts.hasNext()) {
             whileContact = iteratorContacts.next();
             iteratorGroups = beforeGroups.iterator();
             while (iteratorGroups.hasNext()) {
                 whileGroup = iteratorGroups.next();
                 if (whileContact.getGroups().isEmpty() || !whileContact.getGroups().contains(whileGroup)) {
-                    contact = whileContact;
-                    group = whileGroup;
-                    System.out.println("нашли контакт " + contact);
+                    contactForTest = whileContact;
+                    groupForTest = whileGroup;
+                    System.out.println("нашли контакт " + contactForTest);
                     break;
                 }
             }
-            if (contact != null) {
+            if (contactForTest != null) {
                 break;
             }
         }
+    }
+
+
+    @Test
+    public void testContactAddToGroup() {
+        Contacts beforeContacts = app.db().contacts();
+        Groups beforeGroups = app.db().groups();
+        getContactForTest();
+        ContactData contact = contactForTest;
+        GroupData group = groupForTest;
 
         Groups beforeLinkedGroup = app.db().contacts().stream().iterator().next().getGroups();
         System.out.println("Группы связанные ДО " + beforeLinkedGroup);
