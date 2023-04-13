@@ -1,18 +1,19 @@
 package ru.stqa.pft.addressbook.tests;
 
-import org.testng.annotations.Test;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
 import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.model.Groups;
+
 import java.util.Iterator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class AddAndDelContactToGroupTests extends TestBase{
+public class AddAndDelContactToGroupTests extends TestBase {
 
     private ContactData contactForTest;
     private GroupData groupForTest;
@@ -55,6 +56,20 @@ public class AddAndDelContactToGroupTests extends TestBase{
             if (contactForTest != null) {
                 break;
             }
+        }
+
+        if (contactForTest == null) {
+
+            contactForTest = new ContactData().withFirstname("Yulia1").withLastname("Revina1")
+                    .withAddress("000111222").withHomePhone("111").withMobilePhone("222").withWorkPhone("333")
+                    .withEmail("test@mail.ru").withEmail2("test2@mail.ru").withEmail3("test3@mail.ru").withGroupName("test111");
+            groupForTest = new GroupData().withName("test222").withHeader("test333").withFooter("test444");
+
+            app.goTo().groupPage();
+            app.group().create(groupForTest);
+
+            app.goTo().newContactPage();
+            app.contact().create(contactForTest);
         }
     }
 
