@@ -27,12 +27,15 @@ public class ApplicationManager {
     private GroupHelper groupHelper;
     private HelperBase helperBase;
     private String browser;
+    public String strBrowser;
     private DbHelper dbHelper;
 
 
     public ApplicationManager(String browser) {
         this.browser = browser;
+     //   strBrowser = browser.browserName();
         propertiese = new Properties();
+
     }
 
     public void init() throws IOException {
@@ -46,7 +49,7 @@ public class ApplicationManager {
             System.setProperty("webdriver.gecko.driver", "c:\\geckodriver\\geckodriver.exe");
             wd = new FirefoxDriver();
         } else if (browser.equals(BrowserType.CHROME)) {
-            System.setProperty("webdriver.chrome.driver", "c:\\geckodriver\\chromedriver.exe");
+         //   System.setProperty("webdriver.chrome.driver", "c:\\geckodriver\\chromedriver.exe");
             wd = new ChromeDriver();
         }
         } else {
