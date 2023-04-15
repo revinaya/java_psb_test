@@ -52,7 +52,7 @@ public class ApplicationManager {
         } else {
             DesiredCapabilities capabilities = new DesiredCapabilities();
             capabilities.setBrowserName(browser); // любой браузер
-            capabilities.setPlatform(Platform.fromString(System.getProperty("platform", "win7"))); // пробрасываем какую хотим операционку
+            capabilities.setPlatform(Platform.fromString(System.getProperty("platform", "win7"))); // любая операционка
             wd = new RemoteWebDriver(new URL(propertiese.getProperty("selenium.server")), capabilities);
         }
 
