@@ -28,7 +28,7 @@ public class TestBase {
         public static ApplicationManager app = new ApplicationManager(new Browser() {
             @Override
             public String browserName() {
-                return System.getProperty("browser", Browser.FIREFOX.browserName());
+                return System.getProperty("browser", Browser.CHROME.browserName());
             }
 
             @Override

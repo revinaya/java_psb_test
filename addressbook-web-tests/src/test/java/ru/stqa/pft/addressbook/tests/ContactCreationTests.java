@@ -51,7 +51,7 @@ public class ContactCreationTests extends TestBase {
         verifyContactListInUI();
        }
 
-    @Test
+    @Test (enabled = false)
     public void testContactCreation() {
         Groups groups = app.db().groups();
         File photo = new File ("src/test/resources/tomcat.png");

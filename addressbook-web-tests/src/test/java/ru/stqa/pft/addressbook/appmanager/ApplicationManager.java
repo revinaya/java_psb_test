@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.Browser;
 //import org.openqa.selenium.remote.BrowserType;
@@ -45,12 +46,14 @@ public class ApplicationManager {
         dbHelper = new DbHelper();
 
         if("".equals(propertiese.getProperty("selenium.server"))) {
-               if (browser .equals(Browser.FIREFOX)) {
-         //   System.setProperty("webdriver.gecko.driver", "c:\\geckodriver\\geckodriver.exe");
+               if (browser.equals(Browser.FIREFOX)) {
+            System.setProperty("webdriver.gecko.driver", "c:\\geckodriver\\geckodriver.exe");
             wd = new FirefoxDriver();
-        } else if (browser .equals(Browser.CHROME)) {
-         //   System.setProperty("webdriver.chrome.driver", "c:\\geckodriver\\chromedriver.exe");
-            wd = new ChromeDriver();
+        } else if (browser.equals(Browser.CHROME)) {
+            System.setProperty("webdriver.chrome.driver", "c:\\geckodriver\\chromedriver.exe");
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--remote-allow-origins=*");
+            wd = new ChromeDriver(options);
         }
         } else {
             DesiredCapabilities capabilities = new DesiredCapabilities();
