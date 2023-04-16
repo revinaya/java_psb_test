@@ -20,16 +20,5 @@
     "email": "1email@email.ru",
     "email2": "1email2@email.ru",
     "email3": "1email3@email.ru"
-  },
-  {
-    "firstname": "name 2",
-    "lastname": "lastname 2",
-    "address": "address 2",
-    "homePhone": "2321",
-    "mobilePhone": "2927",
-    "workPhone": "2123",
-    "email": "2email@email.ru",
-    "email2": "2email2@email.ru",
-    "email3": "2email3@email.ru"
   }
 ]
