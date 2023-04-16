@@ -73,11 +73,12 @@ public class ContactHelper extends HelperBase {
         click(By.name("update"));
     }
 
-    public void create(ContactData contact) {
+    public ContactData create(ContactData contact) {
       fillContactForm(contact, true);
       submitContactCreation();
       ContactCache = null;
       returnToContactPage();
+      return contact;
     }
     public void modify(ContactData contact) {
         selectContactById(contact.getId());

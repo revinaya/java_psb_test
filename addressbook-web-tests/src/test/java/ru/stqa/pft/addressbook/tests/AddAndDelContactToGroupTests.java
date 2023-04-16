@@ -8,15 +8,12 @@ import ru.stqa.pft.addressbook.model.Contacts;
 import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.model.Groups;
 
-import java.util.Iterator;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertTrue;
 
 public class AddAndDelContactToGroupTests extends TestBase {
 
-    private ContactData contactForTest;
-    private GroupData groupForTest;
 
     @BeforeMethod
     public void ensurePreconditions() {
@@ -31,84 +28,47 @@ public class AddAndDelContactToGroupTests extends TestBase {
                     .withEmail("test@mail.ru").withEmail2("test2@mail.ru").withEmail3("test3@mail.ru").withGroupName("test111"));
         }
     }
-
-    public void getContactForTest() {
-        Contacts beforeContacts = app.db().contacts();
-        Groups beforeGroups = app.db().groups();
-        Iterator<ContactData> iteratorContacts = beforeContacts.iterator();
-        Iterator<GroupData> iteratorGroups = null;
-
-        //  find contact not in group
-        ContactData whileContact;
-        GroupData whileGroup;
-        while (iteratorContacts.hasNext()) {
-            whileContact = iteratorContacts.next();
-            iteratorGroups = beforeGroups.iterator();
-            while (iteratorGroups.hasNext()) {
-                whileGroup = iteratorGroups.next();
-                if (whileContact.getGroups().isEmpty() || !whileContact.getGroups().contains(whileGroup)) {
-                    contactForTest = whileContact;
-                    groupForTest = whileGroup;
-                    System.out.println("find contact " + contactForTest);
-                    break;
-                }
-            }
-            if (contactForTest != null) {
-                break;
-            }
-        }
-
-        if (contactForTest == null) {
-
-            contactForTest = new ContactData().withFirstname("Yulia1").withLastname("Revina1")
-                    .withAddress("000111222").withHomePhone("111").withMobilePhone("222").withWorkPhone("333")
-                    .withEmail("test@mail.ru").withEmail2("test2@mail.ru").withEmail3("test3@mail.ru").withGroupName("test111");
-            groupForTest = new GroupData().withName("test222").withHeader("test333").withFooter("test444");
-
-            app.goTo().groupPage();
-            app.group().create(groupForTest);
-
-            app.goTo().newContactPage();
-            app.contact().create(contactForTest);
-        }
-    }
-
-
     @Test
     public void testContactAddToGroup() {
-        Contacts beforeContacts = app.db().contacts();
-        Groups beforeGroups = app.db().groups();
-        getContactForTest();
-        ContactData contact = contactForTest;
-        GroupData group = groupForTest;
 
-        Groups beforeLinkedGroup = app.db().contacts().stream().iterator().next().getGroups();
-        System.out.println("beforeLinkedGroup: " + beforeLinkedGroup);
+        ContactData contactForTest = app.db().contacts().stream().findAny().get();
+        GroupData groupForTest = app.db().groups().stream().findAny().get();
 
-        app.contact().addToGroup(contact, group);
-        Contacts afterContacts = app.db().contacts();
-        Groups afterGroups = app.db().groups();
-        Groups afterLinkedGroup = app.db().contacts().stream().iterator().next().getGroups();
-        System.out.println("afterLinkedGroup: " + afterLinkedGroup);
+        if(contactForTest.getGroups()
+                .stream().anyMatch(group -> group.getId()==groupForTest.getId())) {
+            app.goTo().newContactPage();
+            contactForTest = app.contact().create(new ContactData().withFirstname("Yulia0").withLastname("Revina0")
+                    .withAddress("000111222").withHomePhone("111").withMobilePhone("222").withWorkPhone("333")
+                    .withEmail("test@mail.ru").withEmail2("test2@mail.ru").withEmail3("test3@mail.ru").withGroupName("test111"));
+            app.goTo().homePage();
+            int maxId = app.db().contacts().stream()
+                    .mapToInt((value) -> {return value.getId();})
+                    .summaryStatistics()
+                    .getMax();
+            contactForTest.withId(maxId);
+        }
+        app.contact().addToGroup(contactForTest, groupForTest);
+        ContactData finalContactForIncluding = contactForTest;
 
-        Assert.assertEquals(afterGroups.size(), beforeGroups.size());
-        Assert.assertEquals(afterContacts.size(), beforeContacts.size());
-        assertThat(afterLinkedGroup, equalTo(beforeLinkedGroup.withAdded(group)));
+        ContactData contactAfterTest = app.db().contacts().stream().filter(c -> c.getId()== finalContactForIncluding.getId()).findAny().get();
+        assertTrue(contactAfterTest.getGroups()
+                .stream().anyMatch(group -> group.getId()==groupForTest.getId()));
     }
 
     @Test
     public void testContactRemoveToGroup() {
         Contacts beforeContact = app.db().contacts();
-        ContactData contact = beforeContact.iterator().next();
+        ContactData contactForTest = beforeContact.iterator().next();
         Groups beforeGroup = app.db().groups();
-        GroupData group = beforeGroup.iterator().next();
-        if (contact.getGroups().isEmpty()) {
-            app.contact().addToGroup(contact, group);
+        GroupData groupForTest = beforeGroup.iterator().next();
+        if(!contactForTest.getGroups()
+                .stream().anyMatch(group -> group.getId()==groupForTest.getId())) {
+            app.contact().addToGroup(contactForTest, groupForTest);
         }
         Groups beforeLinkedGroup = app.db().contacts().stream().iterator().next().getGroups();
         System.out.println("beforeLinkedGroup: " + beforeLinkedGroup);
 
-        app.contact().removeGroup(contact, group);
+        app.contact().removeGroup(contactForTest, groupForTest);
         Contacts afterContact = app.db().contacts();
         Groups afterGroup = app.db().groups();
         Groups afterLinkedGroup = app.db().contacts().stream().iterator().next().getGroups();
@@ -116,6 +76,6 @@ public class AddAndDelContactToGroupTests extends TestBase {
 
         Assert.assertEquals(afterGroup.size(), beforeGroup.size());
         Assert.assertEquals(afterContact.size(), beforeContact.size());
-        assertThat(afterLinkedGroup.withAdded(group), equalTo(beforeLinkedGroup));
+        assertThat(afterLinkedGroup.withAdded(groupForTest), equalTo(beforeLinkedGroup));
     }
 }
